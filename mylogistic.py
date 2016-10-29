@@ -236,7 +236,6 @@ def BinaryClassification(trainfile, labelfile):
   
   #number of iter
   param = {}
-  param['max_num_iters'] = 500
   #二分类
   param['objective'] = 'binary'
   param['learning_rate'] = 1
@@ -281,13 +280,12 @@ def MultiClassification(trainfile, labelfile):
 
   #number of iter
   param = {}
-  param['max_num_iters'] = 500
   #二分类
   param['objective'] = 'multi'
   param['learning_rate'] = 1
-  param['num_iters'] = 50
+  param['num_iters'] = 100
   param['num_class'] = 10
-  param['lam'] = 0.1
+  param['lam'] = 1
 
   model = MyLRModel(param)
   model.Train(train_x, train_y)
@@ -318,6 +316,6 @@ if __name__ == '__main__':
     parser.print_help()
     exit()
 
-  MultiClassification(args.train, args.label)
+#  MultiClassification(args.train, args.label)
 #  BinaryClassification(args.train, args.label)
 
