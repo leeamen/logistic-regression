@@ -3,17 +3,22 @@
 
 from mylogistic import *
 import numpy as np
+import sys
+import argparse
 
 def MultiClassification(trainfile, labelfile):
-  #
   print '训练文件:%s' %(trainfile)
   print '标签文件:%s' %(labelfile)
 
   train_data = np.loadtxt(trainfile, delimiter = ',', dtype = np.float)
-  label_data = np.loadtxt(labelfile, delimiter = ',', dtype = np.int)
+  label_data = np.loadtxt(labelfile, delimiter = ',', dtype = np.float)
+  train_data = np.column_stack((train_data, label_data))
+  np.random.shuffle(train_data)
 
-  train_x = train_data
-  train_y = label_data
+  train_x = train_data[0:4000,0:-1]
+  train_y = train_data[0:4000, -1]
+  test_x = train_data[4000:,0:-1]
+  test_y = train_data[4000:,-1]
 
   #显示图片随机抽取100张
   ShowPictures(train_x)
@@ -21,9 +26,10 @@ def MultiClassification(trainfile, labelfile):
   #number of iter
   param = {}
   #二分类
+  iteration = 1000
   param['objective'] = 'multi'
   param['learning_rate'] = 1
-  param['num_iters'] = 100
+  param['num_iters'] = iteration
   param['num_class'] = 10
   param['lam'] = 1
 
@@ -32,18 +38,19 @@ def MultiClassification(trainfile, labelfile):
 
   #预测(训练数据)
   pre_y = model.Predict(train_x)
- # print pre_y.shape,train_y.shape
- # print sum(pre_y)
-  print '准确度为:%f' %(float(np.sum(train_y == pre_y)) / len(train_y))
+  print '迭代次数:%d' %(iteration)
+  print '训练集准确度为:%f' %(float(np.sum(train_y == pre_y)) / len(train_y))
+  pred_testy = model.Predict(test_x)
+#  print test_y
+#  print pred_testy
+  print '测试集准确率为:%f' %(float(np.sum(test_y == pred_testy))/len(test_y))
 
   for i in range(0, len(train_x)):
-    j = np.random.permutation(5000)[0]
+    j = np.random.permutation(len(train_x))[0]
     pred = model.Predict(train_x[j,:].reshape(1,train_x.shape[1]))
     print '该图像算法预测的数字是:', pred
     ShowPicture(train_x, j)
 
-import sys
-import argparse
 if __name__ == '__main__':
   #参数读取
   parser = argparse.ArgumentParser(description = '逻辑回归')
