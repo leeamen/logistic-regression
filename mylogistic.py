@@ -61,6 +61,7 @@ class MyLRModel:
 
     #hypothesis
     h = self.hypothesis(x, self.theta)
+    #print self.theta
 
     #用概率分类
     if self.param['num_class'] == 1:
@@ -68,6 +69,9 @@ class MyLRModel:
     elif self.param['num_class'] > 1:
       result_class = np.zeros(len(x), dtype = np.int)
       for i in range(0, len(x)):
+       # print h
+       # print h[i]
+       # print np.max(h[i])
         result_class[i] = np.int(np.where(h[i] == np.max(h[i]))[0])
       return result_class
     else:
@@ -117,10 +121,11 @@ class MyLRModel:
     return out
   
   def hypothesis(self, x, theta):
+    #print np.dot(x, theta)
     return self.sigmoid(np.dot(x, theta))
 
   def sigmoid(self, x):
-    return 1 / (1 + np.exp(-1 * x))
+    return 1.0 / (1.0 + np.exp(-1.0 * x))
   
   def cost(self, x, y, theta):
     #m records
@@ -129,10 +134,10 @@ class MyLRModel:
     #
     h = self.hypothesis(x, theta)
     #cost function
-    vector_j = y * np.log(h) + (1 - y) * np.log(1 - h)
+    vector_j = y * np.log(h) + (1.0 - y) * np.log(1.0 - h)
   
     #regular item
-    cost_j = -1.0 / m * np.sum(vector_j) + self.param['lam'] / (2 * m) * np.dot(theta[1:],theta[1:])
+    cost_j = -1.0 / m * np.sum(vector_j) + self.param['lam'] / (2.0 * m) * np.dot(theta[1:],theta[1:])
 
     return cost_j
   
@@ -150,6 +155,11 @@ class MyLRModel:
 
     return grad
 
+def Normalizition(x):
+  mu = np.nanmean(x, axis = 0)
+  sigma = np.nanstd(x, axis = 0)
+  x_norm = (x - mu) / sigma
+  return x_norm
 
 #画点
 import numpy as np

@@ -26,7 +26,7 @@ def MultiClassification(trainfile, labelfile):
   #number of iter
   param = {}
   #二分类
-  iteration = 1000
+  iteration = 10
   param['objective'] = 'multi'
   param['learning_rate'] = 1
   param['num_iters'] = iteration
